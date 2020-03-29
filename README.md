@@ -2,8 +2,8 @@
 
 ## Hardware
 - DE10-nano
-- Rspberry Pi
-- 2 sdcard
+- Raspberry Pi
+- 2 MicroSD card
 - router
 - ...
 
@@ -15,27 +15,37 @@
 
 ## How to do
 
-1. write a rasbian image to Raspberry Pi sdcard and boot the Raspberry Pi, run
+1. write a Raspbian image to Raspberry Pi MicroSD card and boot the Raspberry Pi, run
 ```
    sudo mkdir -p /opt/sdcard
 ```
-then,copy the `boot` and `rootfs` to `/opt/sdcard` on Raspberry Pi sdcard
-
-2. install tftp and nfs server on Raspberry Pi
+2. downlaod and copy the `boot` and `rootfs` to `/opt/sdcard` on Raspberry Pi MicroSD
+3. extract the rootfs achrive to `/opt/sdcard/roofts`
+4. install tftp and nfs server on Raspberry Pi
 ```
-   sudo apt-get install vim tftpd-hpa nfs-kernel-server
+   sudo apt-get install vim minicom tftpd-hpa nfs-kernel-server
    sudo vim /etc/default/tftpd-hpa
    sudo service tftpd-hpa restart
    sudo vim /etc/exports 
    sudo service nfs-kernel-server restart
    sudo exportfs -v
-   sudo minicom
    ifconfig
 ```
-3. unzip the sdcard image anf write to a sdcard for de10_nano
-4. change the ip severip gateway mask in u-boot.scr
+for tftpd-hpa config
+```
+   TFTP_USERNAME="tftp"
+   TFTP_DIRECTORY="/opt/sdcard"
+   TFTP_ADDRESS="0.0.0.0:69"
+   TFTP_OPTIONS="--secure"
+```
+for NFS server config
+```
+   /opt/sdcard/rootfs/ *(rw,no_subtree_check,sync,no_root_squash)    
+```
+5. unzip the sdcard image and write it to a MicroSD card for de10_nano
+6. change the ip severip gateway mask in u-boot.scr
 ![](figure/u-boot.scr_modify.png)
-5. boot the de10_nano
+7. boot the de10_nano
 
 ## de10_nano boot logs
 ```
